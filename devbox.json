@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.2/.schema/devbox.schema.json",
+  "packages": [
+    "python3@latest",
+    "nodejs@22",
+    "pipenv@latest"
+  ],
+  "env": {
+    "PATH": "$PATH:$PWD/node_modules/.bin"
+  },
+  "shell": {
+    "init_hook": [
+      "typeset -g POWERLEVEL9K_INSTANT_PROMPT=off",
+      "echo 'Welcome to devbox!' > /dev/null",
+      "npm install --prefer-offline --no-audit --no-progress"
+    ],
+    "scripts": {
+      "test": [
+        "echo \"Error: no test specified\" && exit 1"
+      ]
+    }
+  }
+}
