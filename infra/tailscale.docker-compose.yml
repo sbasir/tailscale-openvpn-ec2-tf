@@ -1,0 +1,8 @@
+services:
+  tailscale:
+    image: tailscale/tailscale:latest
+    privileged: true                 # Required for Tailscale to control networking
+    volumes:
+      - ./tmp/tailscale:/var/lib/tailscale  # Persist Tailscale state
+    env_file: ".tailscale.env"
+    restart: always

@@ -10,5 +10,6 @@ python_version = "3"
 cdktf = "~=0.21.0"
 pytest = "*"
 cdktf-cdktf-provider-aws = "~=21.0.0"
+python-dotenv = "*"
 
 [dev-packages]
