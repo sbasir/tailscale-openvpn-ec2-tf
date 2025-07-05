@@ -26,15 +26,33 @@ class MyStack(TerraformStack):
         with open('tailscale.docker-compose.yml', 'r') as f:
             tailscaleDockerComposeContent = f.read()
         
-        with open('docker.env.template', 'r') as f:
+        with open('docker.ts.env.template', 'r') as f:
             tailscaleEnvContent = f.read()
-        
-        tailscaleEnvContent = tailscaleEnvContent.replace('${TS_HOSTNAME}', f'{shortRegion.lower()}-aws-tunnel-ts')
-        # Load .env file and get TS_TOKEN
+
+        with open('docker.ts.env.template', 'r') as f:
+            openVpnTsEnvContent = f.read()
+
+        with open('ts-ovpn.docker-compose.yml', 'r') as f:
+            tsOvpnDockerComposeContent = f.read()
+
         load_dotenv()
         ts_auth_key = os.getenv('TS_AUTH_KEY', '')
+        ts_auth_key_2 = os.getenv('TS_AUTH_KEY_2', '')
+        openVpnConfigFile = os.getenv('OPEN_VPN_CONFIG_FILE', 'config.ovpn')
+        
+        with open(openVpnConfigFile, 'r') as f:
+            openVpnConfig = f.read()
         
         tailscaleEnvContent = tailscaleEnvContent.replace('${TS_AUTH_KEY}', ts_auth_key)
+        tailscaleEnvContent = tailscaleEnvContent.replace('${TS_HOSTNAME}', f'{shortRegion.lower()}-aws-tunnel-ts')
+        tailscaleEnvContent = tailscaleEnvContent.replace('${TS_SOCKET}', '/var/run/tailscale/tailscaled.sock')
+
+        openVpnTsEnvContent = openVpnTsEnvContent.replace('${TS_AUTH_KEY}', ts_auth_key_2)
+        openVpnTsEnvContent = openVpnTsEnvContent.replace('${TS_HOSTNAME}', f'{shortRegion.lower()}-aws-ovpn-platform-internal')
+        openVpnTsEnvContent = openVpnTsEnvContent.replace('${TS_SOCKET}', '/var/run/tailscale/ovpn-tailscaled.sock')
+
+        with open('openvpn.Dockerfile', 'r') as f:
+            openVpnDockerfileContent = f.read()
 
         instance = Instance(self, 'instance',
             ami=ami.image_id,
@@ -44,8 +62,7 @@ class MyStack(TerraformStack):
                 'Name': f'TunnelOpenVPN-{shortRegion}'
             },
             user_data_replace_on_change=True,
-            user_data=f"""
-#!/bin/bash
+            user_data=f"""#!/bin/bash
 dnf update
 dnf install docker -y
 usermod -a -G docker ec2-user
@@ -64,11 +81,27 @@ EOF
 
 cat > /home/ec2-user/.tailscale.env << EOF
 {tailscaleEnvContent}
-TS_SOCKET=/var/run/tailscale/tailscaled.sock
+EOF
+
+cat > /home/ec2-user/config.ovpn << EOF
+{openVpnConfig}
+EOF
+
+cat > /home/ec2-user/ts-ovpn-docker-compose.yml << EOF
+{tsOvpnDockerComposeContent}
+EOF
+
+cat > /home/ec2-user/.ovpn-ts.env << EOF
+{openVpnTsEnvContent}
+EOF
+
+cat > /home/ec2-user/openvpn.Dockerfile << EOF
+{openVpnDockerfileContent}
 EOF
 
 cd /home/ec2-user
 COMPOSE_BAKE=true /usr/local/bin/docker-compose -p ts -f tailscale-docker-compose.yml up -d
+COMPOSE_BAKE=true /usr/local/bin/docker-compose -p ts-ovpn -f ts-ovpn-docker-compose.yml up -d
 """
         )
 

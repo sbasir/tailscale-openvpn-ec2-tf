@@ -1,0 +1,33 @@
+services:
+  openvpn:
+    build:
+      dockerfile: openvpn.Dockerfile
+    container_name: openvpn
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    networks:
+      - vpnsecure
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "https://google.com"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s      
+  tailscale:
+    image: tailscale/tailscale:latest
+    privileged: true # Required for Tailscale to control networking
+    network_mode: "service:openvpn"
+    volumes:
+      - ./tmp/tailscale_vpn:/var/lib/tailscale  # Persist Tailscale state
+    env_file: ".ovpn-ts.env"
+    depends_on:
+      openvpn:
+        condition: service_healthy
+    restart: always
+networks:
+  vpnsecure:
+    driver: bridge
+    enable_ipv6: false 
