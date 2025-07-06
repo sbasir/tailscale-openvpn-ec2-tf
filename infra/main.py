@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import os
+import logging
+logging.getLogger('dotenv').setLevel(logging.WARNING)
 from dotenv import load_dotenv
 from constructs import Construct
 from cdktf import App, TerraformStack, CloudBackend, NamedCloudWorkspace, TerraformOutput
@@ -112,8 +114,8 @@ EOF
 chmod +x /home/ec2-user/tailscale-entrypoint.sh
 
 cd /home/ec2-user
-COMPOSE_BAKE=true /usr/local/bin/docker-compose -p ts -f tailscale-docker-compose.yml up -d
 COMPOSE_BAKE=true /usr/local/bin/docker-compose -p ts-ovpn -f ts-ovpn-docker-compose.yml up -d
+COMPOSE_BAKE=true /usr/local/bin/docker-compose -p ts -f tailscale-docker-compose.yml up -d
 """
         )
 
