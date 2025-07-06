@@ -29,16 +29,19 @@ class MyStack(TerraformStack):
         with open('docker.ts.env.template', 'r') as f:
             tailscaleEnvContent = f.read()
 
-        with open('docker.ts.env.template', 'r') as f:
+        with open('docker.ts.ovpn.env.template', 'r') as f:
             openVpnTsEnvContent = f.read()
 
         with open('ts-ovpn.docker-compose.yml', 'r') as f:
             tsOvpnDockerComposeContent = f.read()
 
+        with open('tailscale-entrypoint.sh', 'r') as f:
+            tailscaleEntrypointContent = f.read()
+
         load_dotenv()
         ts_auth_key = os.getenv('TS_AUTH_KEY', '')
         ts_auth_key_2 = os.getenv('TS_AUTH_KEY_2', '')
-        openVpnConfigFile = os.getenv('OPEN_VPN_CONFIG_FILE', 'config.ovpn')
+        openVpnConfigFile = os.getenv('OPENVPN_CONFIG_FILE', 'config.ovpn')
         
         with open(openVpnConfigFile, 'r') as f:
             openVpnConfig = f.read()
@@ -69,6 +72,9 @@ usermod -a -G docker ec2-user
 id ec2-user
 newgrp docker
 
+echo 'net.ipv4.ip_forward = 1' >> /etc/sysctl.conf
+sysctl -p
+
 wget https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) 
 mv docker-compose-$(uname -s)-$(uname -m) /usr/local/bin/docker-compose
 chmod -v +x /usr/local/bin/docker-compose
@@ -98,6 +104,12 @@ EOF
 cat > /home/ec2-user/openvpn.Dockerfile << EOF
 {openVpnDockerfileContent}
 EOF
+
+cat > /home/ec2-user/tailscale-entrypoint.sh << EOF
+{tailscaleEntrypointContent}
+EOF
+
+chmod +x /home/ec2-user/tailscale-entrypoint.sh
 
 cd /home/ec2-user
 COMPOSE_BAKE=true /usr/local/bin/docker-compose -p ts -f tailscale-docker-compose.yml up -d

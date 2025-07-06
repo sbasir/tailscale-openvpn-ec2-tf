@@ -2,7 +2,6 @@ services:
   openvpn:
     build:
       dockerfile: openvpn.Dockerfile
-    container_name: openvpn
     cap_add:
       - NET_ADMIN
     devices:
@@ -15,18 +14,29 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 30s      
+      start_period: 30s
+    sysctls:
+      - net.ipv4.ip_forward=1
+
+
   tailscale:
     image: tailscale/tailscale:latest
     privileged: true # Required for Tailscale to control networking
+    cap_add:
+      - NET_ADMIN
     network_mode: "service:openvpn"
     volumes:
       - ./tmp/tailscale_vpn:/var/lib/tailscale  # Persist Tailscale state
+      - /home/ec2-user/tailscale-entrypoint.sh:/entrypoint.sh:ro
     env_file: ".ovpn-ts.env"
     depends_on:
       openvpn:
         condition: service_healthy
     restart: always
+    sysctls:
+      - net.ipv4.ip_forward=1
+    entrypoint: ["/entrypoint.sh"]
+
 networks:
   vpnsecure:
     driver: bridge

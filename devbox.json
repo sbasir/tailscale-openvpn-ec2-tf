@@ -3,16 +3,20 @@
   "packages": [
     "python3@latest",
     "nodejs@22",
-    "pipenv@latest"
+    "pipenv@latest",
+    "terraform@latest"
   ],
   "env": {
-    "PATH": "$PATH:$PWD/node_modules/.bin"
+    "PATH": "$PATH:$PWD/node_modules/.bin",
+    "PIPENV_PIPFILE": "$PWD/infra/Pipfile"
   },
   "shell": {
     "init_hook": [
       "typeset -g POWERLEVEL9K_INSTANT_PROMPT=off",
       "echo 'Welcome to devbox!' > /dev/null",
-      "npm install --prefer-offline --no-audit --no-progress"
+      "npm install --prefer-offline --no-audit --no-progress",
+      "source <(pipenv run cdktf completion)",
+      "pipenv shell"
     ],
     "scripts": {
       "test": [
