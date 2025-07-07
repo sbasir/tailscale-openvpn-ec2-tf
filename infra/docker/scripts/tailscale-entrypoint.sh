@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 
+apk add busybox-extras
 # Wait for interfaces to be available
 sleep 10
 
