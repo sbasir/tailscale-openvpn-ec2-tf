@@ -26,7 +26,7 @@ def main():
     workspace = os.getenv('TERRAFORM_WORKSPACE', 'tailscale-openvpn-me')
     
     # Validate required environment variables
-    required_vars = ['TS_AUTH_KEY', 'TS_AUTH_KEY_2']
+    required_vars = ['TS_AUTH_KEY', 'TS_AUTH_KEY_2', 'OPENVPN_CONFIG_ENV']
     missing_vars = [var for var in required_vars if not os.getenv(var)]
     
     if missing_vars:

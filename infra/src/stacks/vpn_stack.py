@@ -68,14 +68,14 @@ class VpnStack(TerraformStack):
         """Load and validate environment variables"""
         self.ts_auth_key = os.getenv('TS_AUTH_KEY', '')
         self.ts_auth_key_2 = os.getenv('TS_AUTH_KEY_2', '')
-        self.openvpn_config_file = os.getenv('OPENVPN_CONFIG_FILE', 'config.ovpn')
+        self.openVpnConfigEnv = os.getenv('OPENVPN_CONFIG_ENV', '')
         
         if not self.ts_auth_key or not self.ts_auth_key_2:
             raise ValueError("TS_AUTH_KEY and TS_AUTH_KEY_2 environment variables are required")
         
         # Load OpenVPN config
-        config_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'environments')
-        openvpn_config_path = os.path.join(config_dir, self.openvpn_config_file)
+        config_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'environments', self.openVpnConfigEnv)
+        openvpn_config_path = os.path.join(config_dir, 'config.ovpn')
         
         if not os.path.exists(openvpn_config_path):
             raise FileNotFoundError(f"OpenVPN config file not found: {openvpn_config_path}")

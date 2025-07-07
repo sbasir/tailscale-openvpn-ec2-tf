@@ -29,7 +29,7 @@ exec tailscaled --state=/var/lib/tailscale/tailscaled.state --socket=/var/run/ta
 sleep 5
 
 # Bring up Tailscale with your configuration
-tailscale up --authkey=\$TS_AUTH_KEY --hostname=\$TS_HOSTNAME \$TS_EXTRA_ARGS 
+tailscale up --authkey=$TS_AUTH_KEY --hostname=$TS_HOSTNAME $TS_EXTRA_ARGS 
 
 # Keep container running
 wait
