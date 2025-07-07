@@ -20,13 +20,14 @@ def main():
     app = App()
     
     # Get configuration from environment
-    region = os.getenv('AWS_REGION', 'me-central-1')
+    region = os.getenv('AWS_REGION', '')
+    
     short_region = os.getenv('SHORT_REGION', 'me')
-    organization = os.getenv('TERRAFORM_ORGANIZATION', 'SB_dev')
-    workspace = os.getenv('TERRAFORM_WORKSPACE', 'tailscale-openvpn-me')
+    organization = os.getenv('TERRAFORM_ORGANIZATION', '')
+    workspace = os.getenv('TERRAFORM_WORKSPACE', '')
     
     # Validate required environment variables
-    required_vars = ['TS_AUTH_KEY', 'TS_AUTH_KEY_2', 'OPENVPN_CONFIG_ENV']
+    required_vars = ['TS_AUTH_KEY', 'TS_AUTH_KEY_2', 'OPENVPN_CONFIG_ENV', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_SESSION_TOKEN', 'AWS_REGION', 'SHORT_REGION', 'TERRAFORM_ORGANIZATION', 'TERRAFORM_WORKSPACE']
     missing_vars = [var for var in required_vars if not os.getenv(var)]
     
     if missing_vars:
