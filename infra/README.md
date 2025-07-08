@@ -56,7 +56,6 @@ SHORT_REGION=your_short_region # e.g. me
 
 # Tailscale Configuration
 TS_AUTH_KEY=your_tailscale_auth_key_1
-TS_AUTH_KEY_2=your_tailscale_auth_key_2
 
 # OpenVPN Configuration
 OPENVPN_CONFIG_ENV=your_environment # e.g. prod

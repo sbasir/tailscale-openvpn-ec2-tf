@@ -22,7 +22,7 @@ class TestVpnStack:
         """Test that missing environment variables raise an error"""
         mock_getenv.return_value = ''
         
-        with pytest.raises(ValueError, match="TS_AUTH_KEY and TS_AUTH_KEY_2 environment variables are required"):
+        with pytest.raises(ValueError, match="TS_AUTH_KEY environment variables are required"):
             # This will fail during initialization due to missing env vars
             pass
     
@@ -32,7 +32,6 @@ class TestVpnStack:
         """Test that invalid OpenVPN config file raises an error"""
         mock_getenv.side_effect = lambda key, default='': {
             'TS_AUTH_KEY': 'test_key_1',
-            'TS_AUTH_KEY_2': 'test_key_2',
             'OPENVPN_CONFIG_FILE': 'nonexistent.ovpn'
         }.get(key, default)
         mock_exists.return_value = False
@@ -49,7 +48,6 @@ class TestVpnStack:
         # Mock environment variables
         mock_getenv.side_effect = lambda key, default='': {
             'TS_AUTH_KEY': 'test_key_1',
-            'TS_AUTH_KEY_2': 'test_key_2',
             'OPENVPN_CONFIG_FILE': 'prod.config.ovpn'
         }.get(key, default)
         

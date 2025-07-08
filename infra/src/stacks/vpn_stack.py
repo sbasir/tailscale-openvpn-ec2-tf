@@ -67,11 +67,10 @@ class VpnStack(TerraformStack):
     def _load_environment_variables(self):
         """Load and validate environment variables"""
         self.ts_auth_key = os.getenv('TS_AUTH_KEY', '')
-        self.ts_auth_key_2 = os.getenv('TS_AUTH_KEY_2', '')
         self.openVpnConfigEnv = os.getenv('OPENVPN_CONFIG_ENV', '')
         
-        if not self.ts_auth_key or not self.ts_auth_key_2:
-            raise ValueError("TS_AUTH_KEY and TS_AUTH_KEY_2 environment variables are required")
+        if not self.ts_auth_key:
+            raise ValueError("TS_AUTH_KEY environment variables are required")
         
         # Load OpenVPN config
         config_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'environments', self.openVpnConfigEnv)
@@ -91,12 +90,12 @@ class VpnStack(TerraformStack):
         self.tailscale_env_content = self.tailscale_env_content.replace('${TS_SOCKET}', '/var/run/tailscale/tailscaled.sock')
         
         # Substitute in OpenVPN Tailscale environment content
-        self.openvpn_ts_env_content = self.openvpn_ts_env_content.replace('${TS_AUTH_KEY}', self.ts_auth_key_2)
+        self.openvpn_ts_env_content = self.openvpn_ts_env_content.replace('${TS_AUTH_KEY}', self.ts_auth_key)
         self.openvpn_ts_env_content = self.openvpn_ts_env_content.replace('${TS_HOSTNAME}', f'{self.short_region.lower()}-aws-ovpn-platform-internal')
         self.openvpn_ts_env_content = self.openvpn_ts_env_content.replace('${TS_SOCKET}', '/var/run/tailscale/ovpn-tailscaled.sock')
         
         # Substitute in entrypoint script
-        self.tailscale_entrypoint_content = self.tailscale_entrypoint_content.replace('$$TS_AUTH_KEY', self.ts_auth_key_2)
+        self.tailscale_entrypoint_content = self.tailscale_entrypoint_content.replace('$$TS_AUTH_KEY', self.ts_auth_key)
         self.tailscale_entrypoint_content = self.tailscale_entrypoint_content.replace('$$TS_HOSTNAME', f'{self.short_region.lower()}-aws-ovpn-platform-internal')
         self.tailscale_entrypoint_content = self.tailscale_entrypoint_content.replace('$$TS_EXTRA_ARGS', '--advertise-exit-node --accept-routes')
     
