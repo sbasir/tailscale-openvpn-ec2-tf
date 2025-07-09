@@ -84,6 +84,7 @@ graph TB
 
 - **Infrastructure**: AWS EC2 (Amazon Linux 2023 ARM64)
 - **Infrastructure as Code**: CDK for Terraform (CDKTF)
+- **Development Environment**: Devbox (provides Python 3.8+, CDKTF, and dependencies)
 - **Language**: Python 3.8+
 - **Containerization**: Docker & Docker Compose
 - **VPN Technologies**: 
@@ -99,16 +100,18 @@ graph TB
 - **Tailscale Account** with auth keys
 - **OpenVPN Configuration** files for corporate networks
 - **Terraform Cloud** account for state management
-- **Python 3.8+** and pipenv
+- **Devbox** for development environment ([install devbox](https://www.jetify.com/devbox/docs/installing_devbox/))
 - **AWS CLI** configured with credentials
 
 ## Quick Start
 
-### 1. Clone and Install
+### 1. Clone and Setup Development Environment
 
 ```bash
 git clone <your-repo-url>
 cd tailscale-openvpn-ec2-cdktf
+
+# Enter devbox shell (installs Python, CDKTF, and all dependencies)
 devbox shell
 ```
 
@@ -148,6 +151,7 @@ mkdir -p infra/config/environments/prod
 
 ```bash
 cd infra
+# Ensure you're in the devbox shell for the correct environment
 cdktf deploy
 ```
 
