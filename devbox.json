@@ -9,8 +9,7 @@
     "init_hook": [
       "typeset -g POWERLEVEL9K_INSTANT_PROMPT=off",
       "pipenv install",
-      "alias cdktf='pipenv run cdktf'",
-      "alias python='pipenv run python'"
+      "alias cdktf='npx cdktf-cli@latest'"
     ],
     "scripts": {
       "test": [

@@ -100,6 +100,7 @@ graph TB
 - **Tailscale Account** with auth keys
 - **OpenVPN Configuration** files for corporate networks
 - **Terraform Cloud** account for state management
+- **Python 3.8+** installed
 - **Devbox** for development environment ([install devbox](https://www.jetify.com/devbox/docs/installing_devbox/))
 - **AWS CLI** configured with credentials
 
@@ -111,7 +112,7 @@ graph TB
 git clone <your-repo-url>
 cd tailscale-openvpn-ec2-cdktf
 
-# Enter devbox shell (installs Python, CDKTF, and all dependencies)
+# Enter devbox shell (provides Python, CDKTF, and dependencies)
 devbox shell
 ```
 
@@ -151,7 +152,7 @@ mkdir -p infra/config/environments/prod
 
 ```bash
 cd infra
-# Ensure you're in the devbox shell for the correct environment
+# Ensure you're in the devbox shell
 cdktf deploy
 ```
 
@@ -227,6 +228,8 @@ infra/
 
 ## Management Commands
 
+All commands should be run from the `infra/` directory within the devbox shell:
+
 ```bash
 # Deploy infrastructure
 cdktf deploy
@@ -260,7 +263,7 @@ For detailed information about the network architecture, iptables rules, and pac
 
 ### Common Issues
 
-1. **Deployment Fails**: Check environment variables and AWS credentials
+1. **Deployment Fails**: Check environment variables, AWS credentials, and that you're in the devbox shell
 2. **Tailscale Not Connecting**: Verify auth key and network connectivity
 3. **OpenVPN Issues**: Check OpenVPN configuration file format
 4. **Traffic Not Routing**: Verify routes are approved in Tailscale admin
