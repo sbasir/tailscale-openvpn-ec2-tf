@@ -2,21 +2,15 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.2/.schema/devbox.schema.json",
   "packages": [
     "python3@latest",
-    "nodejs@22",
     "pipenv@latest",
     "terraform@latest"
   ],
-  "env": {
-    "PATH": "$PATH:$PWD/node_modules/.bin",
-    "PIPENV_PIPFILE": "$PWD/infra/Pipfile"
-  },
   "shell": {
     "init_hook": [
       "typeset -g POWERLEVEL9K_INSTANT_PROMPT=off",
-      "echo 'Welcome to devbox!' > /dev/null",
-      "npm install --prefer-offline --no-audit --no-progress",
-      "source <(pipenv run cdktf completion)",
-      "pipenv shell"
+      "pipenv install",
+      "alias cdktf='pipenv run cdktf'",
+      "alias python='pipenv run python'"
     ],
     "scripts": {
       "test": [

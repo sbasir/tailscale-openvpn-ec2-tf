@@ -80,7 +80,7 @@ OPENVPN_CONFIG_ENV=your_environment # e.g. prod
 
 ```bash
 # Synthesize and deploy
-pipenv run python src/main.py
+python src/main.py
 cdktf deploy
 ```
 
