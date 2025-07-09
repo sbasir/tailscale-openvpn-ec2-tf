@@ -109,24 +109,24 @@ graph TB
 ```bash
 git clone <your-repo-url>
 cd tailscale-openvpn-ec2-cdktf
-pipenv install
+devbox shell
 ```
 
 ### 2. Configure Environment
 
-Create a `.env` file:
+Create a `.env` file (or set as Environment Variables) e.g:
 
 ```bash
 # AWS Configuration
 AWS_ACCESS_KEY_ID=your_aws_access_key
 AWS_SECRET_ACCESS_KEY=your_aws_secret_key
 AWS_SESSION_TOKEN=your_aws_session_token
-AWS_REGION=us-east-1
+AWS_REGION=me-central-1
 
 # Terraform Cloud
 TERRAFORM_ORGANIZATION=your_terraform_organization
-TERRAFORM_WORKSPACE=tailscale-openvpn-prod
-SHORT_REGION=us-east-1
+TERRAFORM_WORKSPACE=tailscale-openvpn-me
+SHORT_REGION=me
 
 # Tailscale
 TS_AUTH_KEY=your_tailscale_auth_key
@@ -137,7 +137,7 @@ OPENVPN_CONFIG_ENV=prod
 
 ### 3. Add OpenVPN Configuration
 
-Place your OpenVPN configuration file:
+Place your OpenVPN configuration file e.g. for `prod`:
 
 ```bash
 mkdir -p infra/config/environments/prod
@@ -148,8 +148,6 @@ mkdir -p infra/config/environments/prod
 
 ```bash
 cd infra
-pipenv shell
-python src/main.py
 cdktf deploy
 ```
 
@@ -194,12 +192,13 @@ tailscale up --exit-node={gateway-ip}
 ```
 infra/
 ├── config/
-│   ├── environments/          # Environment-specific OpenVPN configs
+│   ├── environments/         # Environment-specific OpenVPN configs
 │   │   ├── prod/
 │   │   │   └── config.ovpn   # Production OpenVPN config
 │   │   └── non-prod/
-│   └── templates/             # Configuration templates
-├── docker/                    # Docker configurations
+│   │       └── config.ovpn   # Non Production OpenVPN config
+│   └── templates/            # Configuration templates
+├── docker/                   # Docker configurations
 │   ├── compose/              # Docker Compose files
 │   ├── Dockerfiles/          # Custom Dockerfiles
 │   └── scripts/              # Entrypoint scripts
