@@ -90,15 +90,11 @@ class VpnStack(TerraformStack):
         self.tailscale_env_content = self.tailscale_env_content.replace('${TS_SOCKET}', '/var/run/tailscale/tailscaled.sock')
         
         # Substitute in OpenVPN Tailscale environment content
+        self.ts_hostname = f'{self.short_region.lower()}-aws-ovpn-{self.openVpnConfigEnv}'
         self.openvpn_ts_env_content = self.openvpn_ts_env_content.replace('${TS_AUTH_KEY}', self.ts_auth_key)
-        self.openvpn_ts_env_content = self.openvpn_ts_env_content.replace('${TS_HOSTNAME}', f'{self.short_region.lower()}-aws-ovpn-platform-internal')
+        self.openvpn_ts_env_content = self.openvpn_ts_env_content.replace('${TS_HOSTNAME}', self.ts_hostname)
         self.openvpn_ts_env_content = self.openvpn_ts_env_content.replace('${TS_SOCKET}', '/var/run/tailscale/ovpn-tailscaled.sock')
-        
-        # Substitute in entrypoint script
-        self.tailscale_entrypoint_content = self.tailscale_entrypoint_content.replace('$$TS_AUTH_KEY', self.ts_auth_key)
-        self.tailscale_entrypoint_content = self.tailscale_entrypoint_content.replace('$$TS_HOSTNAME', f'{self.short_region.lower()}-aws-ovpn-platform-internal')
-        self.tailscale_entrypoint_content = self.tailscale_entrypoint_content.replace('$$TS_EXTRA_ARGS', '--advertise-exit-node --accept-routes')
-    
+
     def _create_infrastructure(self):
         """Create the main infrastructure"""
         # Substitute variables
