@@ -84,7 +84,7 @@ graph TB
 
 - **Infrastructure**: AWS EC2 (Amazon Linux 2023 ARM64)
 - **Infrastructure as Code**: CDK for Terraform (CDKTF)
-- **Development Environment**: Devbox (provides Python 3.8+, CDKTF, and dependencies)
+- **Development Environment**: Devbox (recommended) or manual setup with Python 3.8+, CDKTF, and dependencies
 - **Language**: Python 3.8+
 - **Containerization**: Docker & Docker Compose
 - **VPN Technologies**: 
@@ -96,24 +96,58 @@ graph TB
 
 ## Prerequisites
 
+### Common Requirements
+
 - **AWS Account** with appropriate permissions
 - **Tailscale Account** with auth keys
 - **OpenVPN Configuration** files for corporate networks
 - **Terraform Cloud** account for state management
-- **Python 3.8+** installed
-- **Devbox** for development environment ([install devbox](https://www.jetify.com/devbox/docs/installing_devbox/))
 - **AWS CLI** configured with credentials
+
+### Development Environment Options
+
+Choose **Option A** for simplified setup or **Option B** for manual control:
+
+#### Option A: Using Devbox (Recommended)
+
+- **Devbox** installed ([install devbox](https://www.jetify.com/devbox/docs/installing_devbox/))
+
+*Devbox automatically provides: Python 3.8+, CDKTF, and all dependencies*
+
+#### Option B: Manual Setup
+
+- **Python 3.8+** installed
+- **CDK for Terraform (CDKTF)** installed ([install guide](https://developer.hashicorp.com/terraform/tutorials/cdktf/cdktf-install))
+- **pip** and **pipenv** or **poetry** for Python dependency management
+
+**Why choose each option?**
+- **Devbox**: Simplified setup, reproducible environment, automatic dependency management
+- **Manual Setup**: Full control over versions, integration with existing development workflow
 
 ## Quick Start
 
 ### 1. Clone and Setup Development Environment
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/sbasir/tailscale-openvpn-ec2-cdktf
 cd tailscale-openvpn-ec2-cdktf
+```
 
+**Option A: Using Devbox**
+```bash
 # Enter devbox shell (provides Python, CDKTF, and dependencies)
 devbox shell
+```
+
+**Option B: Manual Setup**
+```bash
+# Install Python dependencies
+pipenv install && pipenv shell
+```
+
+**Ensure CDKTF is accessible**
+```bash
+cdktf --version
 ```
 
 ### 2. Configure Environment
@@ -152,7 +186,6 @@ mkdir -p infra/config/environments/prod
 
 ```bash
 cd infra
-# Ensure you're in the devbox shell
 cdktf deploy
 ```
 
@@ -228,7 +261,10 @@ infra/
 
 ## Management Commands
 
-All commands should be run from the `infra/` directory within the devbox shell:
+All commands should be run from the `infra/` directory with your development environment active:
+
+- **Devbox users**: Run `devbox shell` first
+- **Manual setup users**: Activate your virtual environment (e.g., `pipenv shell`)
 
 ```bash
 # Deploy infrastructure
@@ -263,10 +299,16 @@ For detailed information about the network architecture, iptables rules, and pac
 
 ### Common Issues
 
-1. **Deployment Fails**: Check environment variables, AWS credentials, and that you're in the devbox shell
-2. **Tailscale Not Connecting**: Verify auth key and network connectivity
-3. **OpenVPN Issues**: Check OpenVPN configuration file format
-4. **Traffic Not Routing**: Verify routes are approved in Tailscale admin
+1. **Deployment Fails**: Check environment variables, AWS credentials, and that your development environment is properly set up
+2. **CDKTF Command Not Found**: 
+   - **Devbox users**: Ensure you're in the devbox shell (`devbox shell`)
+   - **Manual setup users**: Verify CDKTF is installed and in PATH, activate virtual environment
+3. **Python Import Errors**: 
+   - **Devbox users**: Exit and re-enter devbox shell
+   - **Manual setup users**: Ensure virtual environment is activated and dependencies are installed
+4. **Tailscale Not Connecting**: Verify auth key and network connectivity
+5. **OpenVPN Issues**: Check OpenVPN configuration file format
+6. **Traffic Not Routing**: Verify routes are approved in Tailscale admin
 
 ### Debugging Commands
 
@@ -295,7 +337,7 @@ tcpdump -i tun0
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ## Support
 
