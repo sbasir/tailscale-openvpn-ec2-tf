@@ -86,19 +86,21 @@ echo ""
 
 # Test 4: Terraform initialization (without backend)
 echo "⚙️  Test 4: Initializing Terraform (backend disabled)..."
-if terraform init -backend=false > /dev/null 2>&1; then
+init_output=$(terraform init -backend=false 2>&1)
+if [ $? -eq 0 ]; then
     success "Terraform initialized successfully"
 else
-    error "Terraform initialization failed"
+    error "Terraform initialization failed:\n$init_output"
 fi
 echo ""
 
 # Test 5: Terraform validation
 echo "✅ Test 5: Validating Terraform configuration..."
-if terraform validate > /dev/null 2>&1; then
+validate_output=$(terraform validate 2>&1)
+if [ $? -eq 0 ]; then
     success "Terraform configuration is valid"
 else
-    error "Terraform validation failed"
+    error "Terraform validation failed:\n$validate_output"
 fi
 echo ""
 

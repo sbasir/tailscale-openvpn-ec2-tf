@@ -6,7 +6,7 @@ terraform {
     # organization and workspace will be set via environment variables or CLI flags
   }
 
-  required_version = ">= 1.0"
+  required_version = ">= 1.6"
 
   required_providers {
     aws = {

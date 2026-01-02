@@ -27,7 +27,9 @@ locals {
   openvpn_dockerfile_content   = file("${path.module}/docker/Dockerfiles/openvpn.Dockerfile")
 
   # Read OpenVPN configuration
-  openvpn_config = file("${path.module}/config/environments/${var.openvpn_config_env}/config.ovpn")
+  # Validate that the config file exists before reading
+  openvpn_config_path = "${path.module}/config/environments/${var.openvpn_config_env}/config.ovpn"
+  openvpn_config      = fileexists(local.openvpn_config_path) ? file(local.openvpn_config_path) : file("ERROR: OpenVPN config file not found at ${local.openvpn_config_path}. Please create the file or check var.openvpn_config_env value.")
 
   # Substitute variables in environment templates
   tailscale_env_content = replace(

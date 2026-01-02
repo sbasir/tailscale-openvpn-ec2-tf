@@ -444,10 +444,12 @@ Expected deployment times:
 
 ### Infrastructure Cost
 
-Estimated monthly costs (us-east-1):
+Estimated monthly costs (us-east-1, as of January 2026):
 - t4g.nano EC2 instance: ~$3-4/month
 - Data transfer: Variable (depends on usage)
 - Total: ~$5-10/month
+
+**Note:** Pricing is subject to change. Use the [AWS Pricing Calculator](https://calculator.aws/) for current estimates in your region.
 
 ## Continuous Testing
 
