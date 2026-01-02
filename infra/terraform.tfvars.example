@@ -1,0 +1,22 @@
+# Example Terraform variables file
+# Copy this file to terraform.tfvars and fill in your values
+
+# AWS Configuration
+aws_region   = "me-central-1"
+short_region = "me"
+
+# Tailscale Configuration
+ts_auth_key = "tskey-auth-xxxxxxxxxxxxx"
+
+# OpenVPN Configuration
+openvpn_config_env = "prod"
+
+# Optional: EC2 Configuration
+# instance_type = "t4g.nano"
+# key_name      = "tailscale-nord-me"
+
+# Optional: Additional Tags
+# tags = {
+#   Team    = "DevOps"
+#   Project = "VPN-Gateway"
+# }
