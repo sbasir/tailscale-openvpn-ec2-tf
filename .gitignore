@@ -4,6 +4,7 @@ node_modules
 # Development environments
 .devbox
 .venv
+devbox.lock
 
 # Environment variables
 .env
