@@ -1,11 +1,18 @@
-# CDKTF
+# CDKTF (legacy)
 dist/
 imports/*
 !imports/__init__.py
-.terraform
 cdktf.out
 cdktf.log
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
 *terraform.*.tfstate*
+terraform.tfvars
+!terraform.tfvars.example
 
 # Environment files
 .env
@@ -14,7 +21,9 @@ cdktf.log
 
 # OpenVPN configs (sensitive)
 *.ovpn
-config/environments/*.ovpn
+!*.ovpn.example
+config/environments/*/*.ovpn
+!config/environments/*/*.ovpn.example
 
 # Python
 __pycache__/

@@ -1,19 +1,26 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.2/.schema/devbox.schema.json",
   "packages": [
-    "python3@latest",
-    "pipenv@latest",
     "terraform@latest"
   ],
   "shell": {
     "init_hook": [
       "typeset -g POWERLEVEL9K_INSTANT_PROMPT=off",
-      "pipenv install",
-      "alias cdktf='npx cdktf-cli@latest'"
+      "echo 'Terraform environment ready'",
+      "echo 'Run: cd infra && terraform init'"
     ],
     "scripts": {
       "test": [
-        "echo \"Error: no test specified\" && exit 1"
+        "cd infra && terraform validate"
+      ],
+      "init": [
+        "cd infra && terraform init"
+      ],
+      "plan": [
+        "cd infra && terraform plan"
+      ],
+      "apply": [
+        "cd infra && terraform apply"
       ]
     }
   }

@@ -1,0 +1,29 @@
+# Example OpenVPN Configuration File
+# 
+# This is a placeholder. Replace this file with your actual OpenVPN configuration.
+# 
+# Your OpenVPN configuration should include:
+# - client directive
+# - remote server and port
+# - certificates and keys
+# - authentication settings
+# - routing configuration
+#
+# Example structure:
+# 
+# client
+# dev tun
+# proto udp
+# remote vpn.example.com 1194
+# resolv-retry infinite
+# nobind
+# persist-key
+# persist-tun
+# ca ca.crt
+# cert client.crt
+# key client.key
+# remote-cert-tls server
+# cipher AES-256-CBC
+# verb 3
+#
+# For more information, see: https://openvpn.net/community-resources/reference-manual-for-openvpn-2-4/
