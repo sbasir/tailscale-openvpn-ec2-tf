@@ -1,6 +1,8 @@
 # Tailscale OpenVPN EC2 Bridge
 
-A CDK for Terraform (CDKTF) project that deploys a VPN bridge infrastructure on AWS EC2, allowing Tailscale clients to seamlessly access corporate resources through OpenVPN tunnels.
+A Terraform project that deploys a VPN bridge infrastructure on AWS EC2, allowing Tailscale clients to seamlessly access corporate resources through OpenVPN tunnels.
+
+> **📢 Migration Notice**: This project has been migrated from CDKTF to vanilla Terraform. See [MIGRATION.md](MIGRATION.md) for details.
 
 ## What It Is
 
@@ -83,9 +85,7 @@ graph TB
 ## Tech Stack
 
 - **Infrastructure**: AWS EC2 (Amazon Linux 2023 ARM64)
-- **Infrastructure as Code**: CDK for Terraform (CDKTF)
-- **Development Environment**: Devbox (recommended) or manual setup with Python 3.8+, CDKTF, and dependencies
-- **Language**: Python 3.8+
+- **Infrastructure as Code**: Terraform (HashiCorp Configuration Language)
 - **Containerization**: Docker & Docker Compose
 - **VPN Technologies**: 
   - Tailscale (mesh networking)
@@ -96,97 +96,113 @@ graph TB
 
 ## Prerequisites
 
-### Common Requirements
+### Required
 
+- **Terraform CLI** (version 1.0 or later) - [install guide](https://www.terraform.io/downloads)
 - **AWS Account** with appropriate permissions
+- **AWS CLI** configured with credentials
 - **Tailscale Account** with auth keys
 - **OpenVPN Configuration** files for corporate networks
 - **Terraform Cloud** account for state management
-- **AWS CLI** configured with credentials
-
-### Development Environment Options
-
-Choose **Option A** for simplified setup or **Option B** for manual control:
-
-#### Option A: Using Devbox (Recommended)
-
-- **Devbox** installed ([install devbox](https://www.jetify.com/devbox/docs/installing_devbox/))
-
-*Devbox automatically provides: Python 3.8+, CDKTF, and all dependencies*
-
-#### Option B: Manual Setup
-
-- **Python 3.8+** installed
-- **CDK for Terraform (CDKTF)** installed ([install guide](https://developer.hashicorp.com/terraform/tutorials/cdktf/cdktf-install))
-- **pip** and **pipenv** or **poetry** for Python dependency management
-
-**Why choose each option?**
-- **Devbox**: Simplified setup, reproducible environment, automatic dependency management
-- **Manual Setup**: Full control over versions, integration with existing development workflow
 
 ## Quick Start
 
-### 1. Clone and Setup Development Environment
+### 1. Clone and Install Terraform
 
 ```bash
-git clone https://github.com/sbasir/tailscale-openvpn-ec2-cdktf
-cd tailscale-openvpn-ec2-cdktf
+git clone https://github.com/sbasir/tailscale-openvpn-ec2-tf
+cd tailscale-openvpn-ec2-tf
 ```
 
-**Option A: Using Devbox**
-```bash
-# Enter devbox shell (provides Python, CDKTF, and dependencies)
-devbox shell
-```
-
-**Option B: Manual Setup**
-```bash
-# Install Python dependencies
-pipenv install && pipenv shell
-```
-
-**Ensure CDKTF is accessible**
-```bash
-cdktf --version
-```
-
-### 2. Configure Environment
-
-Create a `.env` file (or set as Environment Variables) e.g:
+**Install Terraform** if not already installed:
 
 ```bash
-# AWS Configuration
-AWS_ACCESS_KEY_ID=your_aws_access_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret_key
-AWS_SESSION_TOKEN=your_aws_session_token
-AWS_REGION=me-central-1
+# macOS
+brew install terraform
 
-# Terraform Cloud
-TERRAFORM_ORGANIZATION=your_terraform_organization
-TERRAFORM_WORKSPACE=tailscale-openvpn-me
-SHORT_REGION=me
-
-# Tailscale
-TS_AUTH_KEY=your_tailscale_auth_key
-
-# OpenVPN
-OPENVPN_CONFIG_ENV=prod
+# Linux - see https://www.terraform.io/downloads
+# Or use your package manager
 ```
 
-### 3. Add OpenVPN Configuration
+### 2. Configure Variables
 
-Place your OpenVPN configuration file e.g. for `prod`:
-
-```bash
-mkdir -p infra/config/environments/prod
-# Copy your config.ovpn file to infra/config/environments/prod/config.ovpn
-```
-
-### 4. Deploy Infrastructure
+Create a variables file:
 
 ```bash
 cd infra
-cdktf deploy
+cp terraform.tfvars.example terraform.tfvars
+```
+
+Edit `terraform.tfvars` with your values:
+
+```hcl
+aws_region         = "me-central-1"
+short_region       = "me"
+ts_auth_key        = "tskey-auth-xxxxxxxxxxxxx"
+openvpn_config     = "<openvpn config>"
+```
+
+Alternatively, set environment variables:
+
+```bash
+export TF_VAR_aws_region="me-central-1"
+export TF_VAR_short_region="me"
+export TF_VAR_ts_auth_key="your_tailscale_auth_key"
+export TF_CLOUD_ORGANIZATION="org"
+export TF_WORKSPACE="workspace"
+```
+
+### 3. Configure Terraform Cloud Backend
+
+Authenticate with Terraform Cloud:
+
+```bash
+terraform login
+```
+
+Or set the token as an environment variable:
+
+```bash
+export TF_TOKEN_app_terraform_io="your-terraform-cloud-token"
+```
+
+### 4. Add OpenVPN Configuration
+
+Export your OpenVPN configuration file (e.g., for `prod`):
+
+```bash
+export TF_VAR_openvpn_config="$(cat config.ovpn)"
+```
+
+### 4. Setup OIDC with AWS in Terraform cloud
+
+https://developer.hashicorp.com/terraform/cloud-docs/dynamic-provider-credentials/aws-configuration
+
+### 5. Initialize and Deploy Infrastructure
+
+```bash
+cd infra
+
+# Set Terraform Cloud configuration
+export TF_CLOUD_ORGANIZATION="your_terraform_organization"
+export TF_WORKSPACE="your_workspace"
+
+# Initialize Terraform (first time only)
+terraform init
+
+# Review the plan
+terraform plan
+
+# Deploy
+terraform apply
+```
+
+Or use the Makefile:
+
+```bash
+make init
+make plan
+make apply
 ```
 
 ### 5. Configure Tailscale (Post-Deployment)
@@ -240,47 +256,52 @@ infra/
 │   ├── compose/              # Docker Compose files
 │   ├── Dockerfiles/          # Custom Dockerfiles
 │   └── scripts/              # Entrypoint scripts
-└── src/                      # CDKTF source code
-    ├── main.py               # Main application
-    └── stacks/               # Stack definitions
+├── *.tf                      # Terraform configuration files
+├── terraform.tfvars.example  # Example variables file
+├── user_data.sh.tpl          # EC2 user data template
+└── Makefile                  # Helper commands
 ```
 
-### Environment Variables
+### Terraform Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `AWS_ACCESS_KEY_ID` | AWS access key | ✓ |
-| `AWS_SECRET_ACCESS_KEY` | AWS secret key | ✓ |
-| `AWS_SESSION_TOKEN` | AWS session token | ✓ |
-| `AWS_REGION` | AWS region | ✓ |
-| `TERRAFORM_ORGANIZATION` | Terraform Cloud org | ✓ |
-| `TERRAFORM_WORKSPACE` | Terraform workspace | ✓ |
-| `SHORT_REGION` | Short region identifier | ✓ |
-| `TS_AUTH_KEY` | Tailscale auth key | ✓ |
-| `OPENVPN_CONFIG_ENV` | OpenVPN config environment | ✓ |
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `aws_region` | AWS region to deploy to | ✓ | - |
+| `short_region` | Short region identifier | ✓ | - |
+| `ts_auth_key` | Tailscale auth key | ✓ | - |
+| `openvpn_config` | OpenVPN config | ✓ | - |
+| `instance_type` | EC2 instance type | ✗ | `t4g.nano` |
+| `tags` | Additional resource tags | ✗ | `{}` |
+
+### AWS Credentials
+
+AWS credentials can be provided via:
+- AWS CLI configuration (`~/.aws/credentials`)
+- Environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN`)
+- IAM role (when running on EC2 or in CI/CD)
 
 ## Management Commands
 
-All commands should be run from the `infra/` directory with your development environment active:
-
-- **Devbox users**: Run `devbox shell` first
-- **Manual setup users**: Activate your virtual environment (e.g., `pipenv shell`)
+All commands should be run from the `infra/` directory:
 
 ```bash
-# Deploy infrastructure
-cdktf deploy
+# Using Terraform directly
+terraform init    # Initialize (first time only)
+terraform plan    # View deployment plan
+terraform apply   # Deploy infrastructure
+terraform destroy # Destroy infrastructure
+terraform fmt     # Format Terraform files
+terraform validate # Validate configuration
 
-# View deployment plan
-cdktf plan
-
-# Destroy infrastructure
-cdktf destroy
-
-# View current state
-cdktf list
-
-# Check differences
-cdktf diff
+# Using Makefile (recommended)
+make help     # Show available commands
+make init     # Initialize Terraform
+make plan     # View deployment plan
+make apply    # Deploy infrastructure
+make destroy  # Destroy infrastructure
+make validate # Validate and check formatting
+make fmt      # Format Terraform files
+make clean    # Clean up Terraform files
 ```
 
 ## Networking Details
@@ -299,20 +320,42 @@ For detailed information about the network architecture, iptables rules, and pac
 
 ### Common Issues
 
-1. **Deployment Fails**: Check environment variables, AWS credentials, and that your development environment is properly set up
-2. **CDKTF Command Not Found**: 
-   - **Devbox users**: Ensure you're in the devbox shell (`devbox shell`)
-   - **Manual setup users**: Verify CDKTF is installed and in PATH, activate virtual environment
-3. **Python Import Errors**: 
-   - **Devbox users**: Exit and re-enter devbox shell
-   - **Manual setup users**: Ensure virtual environment is activated and dependencies are installed
-4. **Tailscale Not Connecting**: Verify auth key and network connectivity
-5. **OpenVPN Issues**: Check OpenVPN configuration file format
-6. **Traffic Not Routing**: Verify routes are approved in Tailscale admin
+1. **Terraform Init Fails**: 
+   - Ensure you've authenticated with Terraform Cloud (`terraform login`)
+   - Check organization and workspace names are correct
+   - Verify `TF_API_TOKEN` environment variable if using CI/CD
+
+2. **Variable Errors**: 
+   - Create `terraform.tfvars` from the example file
+   - Or set environment variables with `TF_VAR_` prefix
+   - Ensure all required variables are provided
+
+3. **Deployment Fails**: 
+   - Check AWS credentials are configured correctly
+   - Verify you have necessary AWS permissions
+   - Review Terraform plan output for specific errors
+
+4. **Tailscale Not Connecting**: 
+   - Verify Tailscale auth key is valid and not expired
+   - Check EC2 instance can reach Tailscale servers
+   - Review container logs for Tailscale errors
+
+5. **OpenVPN Issues**: 
+   - Verify OpenVPN config file exists in correct location
+   - Check OpenVPN configuration file format
+   - Review container logs for OpenVPN errors
+
+6. **Traffic Not Routing**: 
+   - Verify routes are approved in Tailscale admin console
+   - Check iptables rules are set correctly
+   - Ensure IP forwarding is enabled
 
 ### Debugging Commands
 
 ```bash
+# SSH into EC2 instance (use your key)
+ssh -i ~/.ssh/your-key.pem ec2-user@<instance-ip>
+
 # Check container logs
 docker-compose logs tailscale
 docker-compose logs openvpn

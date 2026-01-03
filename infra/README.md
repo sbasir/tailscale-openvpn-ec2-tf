@@ -1,6 +1,6 @@
 # Tailscale + OpenVPN Infrastructure
 
-This CDKTF project deploys a VPN infrastructure using Tailscale and OpenVPN on AWS EC2.
+This Terraform project deploys a VPN infrastructure using Tailscale and OpenVPN on AWS EC2.
 
 ## Project Structure
 
@@ -32,15 +32,14 @@ infra/
 
 ## Prerequisites
 
-- Python 3.8+
-- pipenv
+- Terraform CLI
 - AWS CLI configured
 - Terraform Cloud account
 - Tailscale account with auth keys
 
 ## Environment Variables
 
-Create a `.env` file with the following variables:
+Export the following variables:
 
 ```bash
 # AWS Configuration
@@ -50,29 +49,21 @@ AWS_SESSION_TOKEN=your_aws_session_token
 AWS_REGION=your_aws_region
 
 # Terraform Cloud Configuration
-TERRAFORM_ORGANIZATION=your_terraform_organization
-TERRAFORM_WORKSPACE=your_terraform_workspace # e.g. tailscale-openvpn-me
+TF_CLOUD_ORGANIZATION=your_terraform_organization
+TF_WORKSPACE=your_terraform_workspace # e.g. tailscale-openvpn-me
 SHORT_REGION=your_short_region # e.g. me
 
 # Tailscale Configuration
-TS_AUTH_KEY=your_tailscale_auth_key_1
+TS_AUTH_KEY=your_tailscale_auth_key
 
 # OpenVPN Configuration
-OPENVPN_CONFIG_ENV=your_environment # e.g. prod
+OPENVPN_CONFIG=ovpn_config
 ```
 
 ## Installation
 
-1. Install dependencies:
-   ```bash
-   pipenv install
-   ```
-
-2. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   # Edit .env with your actual values
-   ```
+Install AWS CLI
+Install terraform CLI
 
 ## Usage
 

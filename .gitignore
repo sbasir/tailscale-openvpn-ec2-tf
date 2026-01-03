@@ -1,4 +1,24 @@
+# Node modules (legacy CDKTF)
 node_modules
+
+# Development environments
 .devbox
 .venv
+devbox.lock
+
+# Environment variables
 .env
+
+# Terraform files
+**/.terraform/
+**/.terraform.lock.hcl
+**/terraform.tfstate
+**/terraform.tfstate.backup
+**/terraform.tfvars
+**/.terraformrc
+**/terraform.rc
+
+# CDKTF generated files (legacy)
+**/cdktf.out/
+**/.gen/
+**/imports/

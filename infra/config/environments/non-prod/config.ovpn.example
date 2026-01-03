@@ -1,0 +1,5 @@
+# Example OpenVPN Configuration File (Non-Production)
+# 
+# This is a placeholder. Replace this file with your actual OpenVPN configuration.
+# 
+# See config.ovpn.example in the prod directory for an example structure.
