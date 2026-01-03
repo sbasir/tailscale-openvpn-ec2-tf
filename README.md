@@ -110,8 +110,8 @@ graph TB
 ### 1. Clone and Install Terraform
 
 ```bash
-git clone https://github.com/sbasir/tailscale-openvpn-ec2-cdktf
-cd tailscale-openvpn-ec2-cdktf
+git clone https://github.com/sbasir/tailscale-openvpn-ec2-tf
+cd tailscale-openvpn-ec2-tf
 ```
 
 **Install Terraform** if not already installed:
@@ -139,7 +139,7 @@ Edit `terraform.tfvars` with your values:
 aws_region         = "me-central-1"
 short_region       = "me"
 ts_auth_key        = "tskey-auth-xxxxxxxxxxxxx"
-openvpn_config_env = "prod"
+openvpn_config     = "<openvpn config>"
 ```
 
 Alternatively, set environment variables:
@@ -148,7 +148,8 @@ Alternatively, set environment variables:
 export TF_VAR_aws_region="me-central-1"
 export TF_VAR_short_region="me"
 export TF_VAR_ts_auth_key="your_tailscale_auth_key"
-export TF_VAR_openvpn_config_env="prod"
+export TF_CLOUD_ORGANIZATION="org"
+export TF_WORKSPACE="workspace"
 ```
 
 ### 3. Configure Terraform Cloud Backend
@@ -167,12 +168,15 @@ export TF_TOKEN_app_terraform_io="your-terraform-cloud-token"
 
 ### 4. Add OpenVPN Configuration
 
-Place your OpenVPN configuration file (e.g., for `prod`):
+Export your OpenVPN configuration file (e.g., for `prod`):
 
 ```bash
-mkdir -p infra/config/environments/prod
-# Copy your config.ovpn file to infra/config/environments/prod/config.ovpn
+export TF_VAR_openvpn_config="$(cat config.ovpn)"
 ```
+
+### 4. Setup OIDC with AWS in Terraform cloud
+
+https://developer.hashicorp.com/terraform/cloud-docs/dynamic-provider-credentials/aws-configuration
 
 ### 5. Initialize and Deploy Infrastructure
 
@@ -265,9 +269,8 @@ infra/
 | `aws_region` | AWS region to deploy to | ✓ | - |
 | `short_region` | Short region identifier | ✓ | - |
 | `ts_auth_key` | Tailscale auth key | ✓ | - |
-| `openvpn_config_env` | OpenVPN config environment | ✓ | - |
+| `openvpn_config` | OpenVPN config | ✓ | - |
 | `instance_type` | EC2 instance type | ✗ | `t4g.nano` |
-| `key_name` | AWS EC2 key pair name | ✗ | `tailscale-nord-me` |
 | `tags` | Additional resource tags | ✗ | `{}` |
 
 ### AWS Credentials

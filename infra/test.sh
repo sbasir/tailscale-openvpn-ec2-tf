@@ -130,7 +130,7 @@ if [[ "$MODE" == "full" ]]; then
         "TF_VAR_aws_region"
         "TF_VAR_short_region"
         "TF_VAR_ts_auth_key"
-        "TF_VAR_openvpn_config_env"
+        "TF_VAR_openvpn_config"
     )
     
     missing_vars=()

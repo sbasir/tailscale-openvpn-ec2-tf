@@ -60,7 +60,7 @@ Edit `terraform.tfvars` with your values:
 aws_region         = "me-central-1"
 short_region       = "me"
 ts_auth_key        = "tskey-auth-xxxxxxxxxxxxx"
-openvpn_config_env = "prod"
+openvpn_config     = "<openvpn config>"
 ```
 
 ### 4. Configure Backend (Terraform Cloud)
@@ -160,7 +160,7 @@ The following environment variables are now defined as Terraform variables:
 | `AWS_REGION` | `var.aws_region` |
 | `SHORT_REGION` | `var.short_region` |
 | `TS_AUTH_KEY` | `var.ts_auth_key` |
-| `OPENVPN_CONFIG_ENV` | `var.openvpn_config_env` |
+| `OPENVPN_CONFIG` | `var.openvpn_config` |
 
 AWS credentials can still be provided via environment variables or AWS CLI configuration.
 
@@ -176,8 +176,7 @@ A new workflow has been provided at `.github/workflows/terraform.yml`. Configure
 - `AWS_REGION`
 - `SHORT_REGION`
 - `TS_AUTH_KEY`
-- `OPENVPN_CONFIG_ENV`
-- `AWS_KEY_NAME`
+- `OPENVPN_CONFIG`
 
 ### Other CI/CD Systems
 Replace `cdktf` commands with `terraform` commands and ensure Terraform CLI is installed in your CI environment.

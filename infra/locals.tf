@@ -3,7 +3,7 @@
 locals {
   # Hostnames for Tailscale services
   ts_hostname_tunnel = "${lower(var.short_region)}-aws-tunnel-ts"
-  ts_hostname_ovpn   = "${lower(var.short_region)}-aws-ovpn-${var.openvpn_config_env}"
+  ts_hostname_ovpn   = "${lower(var.short_region)}-aws-ovpn"
 
   # Tags for resources
   default_tags = {
@@ -25,11 +25,6 @@ locals {
   # Read scripts and Dockerfiles
   tailscale_entrypoint_content = file("${path.module}/docker/scripts/tailscale-entrypoint.sh")
   openvpn_dockerfile_content   = file("${path.module}/docker/Dockerfiles/openvpn.Dockerfile")
-
-  # Read OpenVPN configuration
-  # Validate that the config file exists before reading
-  openvpn_config_path = "${path.module}/config/environments/${var.openvpn_config_env}/config.ovpn"
-  openvpn_config      = fileexists(local.openvpn_config_path) ? file(local.openvpn_config_path) : file("ERROR: OpenVPN config file not found at ${local.openvpn_config_path}. Please create the file or check var.openvpn_config_env value.")
 
   # Substitute variables in environment templates
   tailscale_env_content = replace(

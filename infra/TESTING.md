@@ -46,7 +46,7 @@ cd infra
 export TF_VAR_aws_region="us-east-1"
 export TF_VAR_short_region="test"
 export TF_VAR_ts_auth_key="test-key-for-validation"
-export TF_VAR_openvpn_config_env="prod"
+export TF_VAR_openvpn_config="ovpn config"
 
 # Set Terraform Cloud configuration
 export TF_CLOUD_ORGANIZATION="your-org"
@@ -155,8 +155,7 @@ Configure these in GitHub repository settings:
 - `AWS_REGION` - AWS region for deployment
 - `SHORT_REGION` - Short region identifier
 - `TS_AUTH_KEY` - Tailscale authentication key
-- `OPENVPN_CONFIG_ENV` - OpenVPN environment (prod/non-prod)
-- `AWS_KEY_NAME` - AWS SSH key pair name
+- `OPENVPN_CONFIG` - OpenVPN config
 
 #### Testing the CI/CD Pipeline
 
@@ -359,7 +358,7 @@ cat > terraform.tfvars << EOF
 aws_region = "us-east-1"
 short_region = "us"
 ts_auth_key = "your-key"
-openvpn_config_env = "prod"
+openvpn_config = "<OVPN Config>"
 EOF
 
 # Check AWS credentials

@@ -4,6 +4,9 @@ set -e
 # Update system and install Docker
 dnf update -y
 dnf install docker -y
+mkdir -p /usr/lib/docker/cli-plugins
+curl -L https://github.com/docker/buildx/releases/download/v0.17.1/buildx-v0.17.1.linux-arm64 --output /usr/lib/docker/cli-plugins/docker-buildx
+chmod +x /usr/lib/docker/cli-plugins/docker-buildx
 usermod -a -G docker ec2-user
 systemctl enable docker.service
 systemctl start docker.service

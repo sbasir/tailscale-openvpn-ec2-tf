@@ -9,11 +9,10 @@ short_region = "me"
 ts_auth_key = "tskey-auth-xxxxxxxxxxxxx"
 
 # OpenVPN Configuration
-openvpn_config_env = "prod"
+openvpn_config = "<openvpn config>"
 
 # Optional: EC2 Configuration
 # instance_type = "t4g.nano"
-# key_name      = "tailscale-nord-me"
 
 # Optional: Additional Tags
 # tags = {

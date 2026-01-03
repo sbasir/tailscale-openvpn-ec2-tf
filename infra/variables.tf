@@ -16,8 +16,8 @@ variable "ts_auth_key" {
   sensitive   = true
 }
 
-variable "openvpn_config_env" {
-  description = "OpenVPN configuration environment (e.g., 'prod', 'non-prod')"
+variable "openvpn_config" {
+  description = "OpenVPN configuration"
   type        = string
 }
 
@@ -25,12 +25,6 @@ variable "instance_type" {
   description = "EC2 instance type"
   type        = string
   default     = "t4g.nano"
-}
-
-variable "key_name" {
-  description = "AWS EC2 key pair name for SSH access"
-  type        = string
-  default     = "tailscale-nord-me"
 }
 
 variable "tags" {
