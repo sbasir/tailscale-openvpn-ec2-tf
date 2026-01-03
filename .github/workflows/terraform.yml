@@ -55,13 +55,12 @@ jobs:
       
       - name: Terraform Plan
         id: plan
-        if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
         env:
           TF_VAR_aws_region: ${{ vars.AWS_REGION }}
           TF_VAR_short_region: ${{ vars.SHORT_REGION }}
           TF_VAR_ts_auth_key: ${{ secrets.TS_AUTH_KEY }}
-          TF_VAR_openvpn_config: ${{ secrets[format('OPENVPN_CONFIG_{}', inputs.openvpn_config_env)] }}
+          TF_VAR_openvpn_config: ${{ secrets[format('OPENVPN_CONFIG_{0}', inputs.openvpn_config_env)] }}
         continue-on-error: true
       
       - name: Comment PR with Plan
@@ -95,10 +94,10 @@ jobs:
             })
       
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve -input=false
         env:
           TF_VAR_aws_region: ${{ vars.AWS_REGION }}
           TF_VAR_short_region: ${{ vars.SHORT_REGION }}
           TF_VAR_ts_auth_key: ${{ secrets.TS_AUTH_KEY }}
-          TF_VAR_openvpn_config: ${{ secrets[format('OPENVPN_CONFIG_{}', inputs.openvpn_config_env)] }}
+          TF_VAR_openvpn_config: ${{ secrets[format('OPENVPN_CONFIG_{0}', inputs.openvpn_config_env)] }}
