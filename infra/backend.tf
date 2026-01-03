@@ -3,10 +3,14 @@
 terraform {
   cloud {
     # hostname defaults to app.terraform.io
-    # organization and workspace can be set via:
-    # 1. TF_CLOUD_ORGANIZATION and TF_WORKSPACE environment variables
-    # 2. terraform.tfvars or *.auto.tfvars files
-    # 3. -backend-config flags during terraform init
+    # organization and workspace MUST be set via environment variables:
+    # - TF_CLOUD_ORGANIZATION: Your Terraform Cloud organization name
+    # - TF_WORKSPACE: Your workspace name
+    #
+    # Example:
+    #   export TF_CLOUD_ORGANIZATION="your-org"
+    #   export TF_WORKSPACE="your-workspace"
+    #   terraform init
   }
 
   required_version = ">= 1.6"
