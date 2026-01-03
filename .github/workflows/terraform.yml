@@ -47,7 +47,7 @@ jobs:
         run: terraform init
         env:
           TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
-          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+          TF_WORKSPACE: ${{ vars.TF_WORKSPACE }}
       
       - name: Terraform Validate
         id: validate
