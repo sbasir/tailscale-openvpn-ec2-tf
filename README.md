@@ -179,10 +179,12 @@ mkdir -p infra/config/environments/prod
 ```bash
 cd infra
 
+# Set Terraform Cloud configuration
+export TF_CLOUD_ORGANIZATION="your_terraform_organization"
+export TF_WORKSPACE="your_workspace"
+
 # Initialize Terraform (first time only)
-terraform init \
-  -backend-config="organization=your_terraform_organization" \
-  -backend-config="workspaces={name=\"your_workspace\"}"
+terraform init
 
 # Review the plan
 terraform plan

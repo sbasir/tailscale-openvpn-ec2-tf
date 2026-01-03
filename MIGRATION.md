@@ -84,10 +84,12 @@ export TF_TOKEN_app_terraform_io="your-token"
 ```bash
 cd infra
 
+# Set Terraform Cloud configuration
+export TF_CLOUD_ORGANIZATION="your-org"
+export TF_WORKSPACE="your-workspace"
+
 # Initialize Terraform (first time only)
-terraform init \
-  -backend-config="organization=your-org" \
-  -backend-config="workspaces={name=\"your-workspace\"}"
+terraform init
 
 # Review planned changes
 terraform plan
@@ -183,11 +185,11 @@ Replace `cdktf` commands with `terraform` commands and ensure Terraform CLI is i
 ## Troubleshooting
 
 ### Issue: Backend initialization fails
-**Solution:** Ensure you're using the correct organization and workspace names:
+**Solution:** Ensure environment variables are set correctly:
 ```bash
-terraform init \
-  -backend-config="organization=YOUR_ORG" \
-  -backend-config="workspaces={name=\"YOUR_WORKSPACE\"}"
+export TF_CLOUD_ORGANIZATION="YOUR_ORG"
+export TF_WORKSPACE="YOUR_WORKSPACE"
+terraform init
 ```
 
 ### Issue: Variable not found

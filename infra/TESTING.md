@@ -48,10 +48,12 @@ export TF_VAR_short_region="test"
 export TF_VAR_ts_auth_key="test-key-for-validation"
 export TF_VAR_openvpn_config_env="prod"
 
+# Set Terraform Cloud configuration
+export TF_CLOUD_ORGANIZATION="your-org"
+export TF_WORKSPACE="your-workspace"
+
 # Initialize with backend
-terraform init \
-  -backend-config="organization=your-org" \
-  -backend-config="workspaces={name=\"your-workspace\"}"
+terraform init
 
 # Generate plan
 terraform plan
@@ -319,10 +321,10 @@ terraform login
 # Verify organization/workspace exist
 # Check at https://app.terraform.io/
 
-# Try with explicit backend config
-terraform init \
-  -backend-config="organization=YOUR_ORG" \
-  -backend-config="workspaces={name=\"YOUR_WORKSPACE\"}"
+# Set environment variables and retry
+export TF_CLOUD_ORGANIZATION="YOUR_ORG"
+export TF_WORKSPACE="YOUR_WORKSPACE"
+terraform init
 ```
 
 ### Test Fails: Terraform Validate
